@@ -55,9 +55,16 @@ while (offInput < input.length) {
 		append(chunk);
 
 		if (repeat) {
-			const repeatChunk = new Uint8Array(repeat);
-			repeatChunk.fill(chunk[chunk.length - 1]);
-			append(repeatChunk);
+			const repeatChunk = chunk.slice(chunk.length - lbDist, Math.min(repeat, chunk.length));
+			while (repeat > 0) {
+				if (repeat > repeatChunk.length) {
+					append(repeatChunk);
+					repeat -= repeatChunk.length;
+				} else {
+					append(repeatChunk.slice(0, repeat));
+					repeat = 0;
+				}
+			}
 		}
 		lbLen = 0;
 	}
